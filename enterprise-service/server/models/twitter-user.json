@@ -1,0 +1,74 @@
+{
+  "name": "TwitterUser",
+  "base": "User",
+  "idInjection": true,
+  "options": {
+    "validateUpsert": true
+  },
+  "properties": {
+    "id": {
+      "type": "string",
+      "required": true
+    },
+    "screenName": {
+      "type": "string",
+      "required": true
+    },
+    "name": {
+      "type": "string"
+    }
+  },
+  "validations": [],
+  "relations": {},
+  "acls": [],
+  "methods": {
+    "getUserById": {
+      "accepts": [
+        {
+          "required": true,
+          "arg": "userId",
+          "type": "string"
+        }
+      ],
+      "returns": [
+        {
+          "arg": "result",
+          "type": "object",
+          "root": true,
+          "description": "Instance of twitter user"
+        }
+      ],
+      "description": "Get a twitter user from an ID",
+      "http": [
+        {
+          "path": "/getUserById",
+          "verb": "post"
+        }
+      ]
+    },
+    "getUserByScreenName": {
+      "accepts": [
+        {
+          "required": true,
+          "arg": "screenName",
+          "type": "string"
+        }
+      ],
+      "returns": [
+        {
+          "arg": "result",
+          "type": "object",
+          "root": true,
+          "description": "Instance of twitter user"
+        }
+      ],
+      "description": "Get a twitter user from a screen name",
+      "http": [
+        {
+          "path": "/getUserByScreenName",
+          "verb": "post"
+        }
+      ]
+    }
+  }
+}

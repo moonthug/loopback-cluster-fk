@@ -1,0 +1,74 @@
+{
+  "db": {
+    "name": "db",
+    "localStorage": "",
+    "file": "",
+    "connector": "memory"
+  },
+  "twitterDs": {
+    "name": "twitter",
+    "baseURL": "",
+    "crud": false,
+    "debug": true,
+    "connector": "rest",
+    "operations": [
+      {
+        "template": {
+          "method": "POST",
+          "url": "https://api.twitter.com/oauth2/token",
+          "headers": {
+            "accepts": "application/json",
+            "content-type": "application/x-www-form-urlencoded;charset=UTF-8",
+            "authorization": "Basic {oauthToken}"
+          },
+          "body": "grant_type=client_credentials"
+        },
+        "functions": {
+          "getAccessToken": [
+            "oauthToken"
+          ]
+        }
+      },
+      {
+        "template": {
+          "method": "GET",
+          "url": "https://api.twitter.com/1.1/users/show.json",
+          "headers": {
+            "accepts": "application/json",
+            "content-type": "application/json",
+            "authorization": "Bearer {accessToken}"
+          },
+          "query": {
+            "user_id": "{userId}"
+          }
+        },
+        "functions": {
+          "getUserById": [
+            "userId",
+            "accessToken"
+          ]
+        }
+      },
+      {
+        "template": {
+          "method": "GET",
+          "url": "https://api.twitter.com/1.1/users/show.json",
+          "headers": {
+            "accepts": "application/json",
+            "content-type": "application/json",
+            "authorization": "Bearer {accessToken}"
+          },
+          "query": {
+            "screen_name": "{screenName}"
+          }
+        },
+        "functions": {
+          "getUserByScreenName": [
+            "screenName",
+            "accessToken"
+          ]
+        }
+      }
+    ]
+  }
+}

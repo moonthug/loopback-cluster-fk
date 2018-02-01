@@ -1,0 +1,29 @@
+{
+  "enterpriseDs": {
+    "name": "enterpriseDs",
+    "baseURL": "",
+    "crud": true,
+    "debug": true,
+    "connector": "rest",
+    "operations": [
+      {
+        "template": {
+          "method": "POST",
+          "url": "http://example.com/",
+          "headers": {
+            "accept": "application/json",
+            "content-type": "multipart/form-data"
+          },
+          "form": {
+            "screenName": "{screenName}"
+          }
+        },
+        "functions": {
+          "getUserByScreenName": [
+            "screenName"
+          ]
+        }
+      }
+    ]
+  }
+}

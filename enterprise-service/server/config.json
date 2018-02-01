@@ -1,0 +1,32 @@
+{
+  "restApiRoot": "/api",
+  "host": "0.0.0.0",
+  "port": 3000,
+  "remoting": {
+    "context": false,
+    "rest": {
+      "handleErrors": false,
+      "normalizeHttpPath": false,
+      "xml": false
+    },
+    "json": {
+      "strict": false,
+      "limit": "100kb"
+    },
+    "urlencoded": {
+      "extended": true,
+      "limit": "100kb"
+    },
+    "cors": false
+  },
+  "twitterDs": {
+    "consumerKey": "lMH11prHgIYFIDKvblcyLjp18",
+    "consumerSecret": "gGYwp0lfLTEnxnjtYF0pxz7hPrKGrMNTw7VIcLtr8sTT8dKFAH",
+    "accessToken": "14088367-g6rwm5gEHjdSAS7faSj6MhHQJbinNRnv3DwTm2qfb",
+    "accessTokenSecret": "7XJjzj4uY4IBPEjcpkzdLf1PslhmTRW0eRL4ETFeYmGDV"
+  },
+  "serviceDiscovery": {
+    "type": "etcd",
+    "host": "127.0.0.1"
+  }
+}

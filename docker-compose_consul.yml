@@ -1,0 +1,109 @@
+version: '3'
+
+services:
+
+  #####################################
+  #
+  # Enterprise
+
+  enterprise-service-1:
+    build:
+      context: enterprise-service
+    environment:
+      - SERVICE_DISCOVERY_ADAPTER=consul
+      - SERVICE_DISCOVERY_HOST=consul-master
+      - SERVICE_DISCOVERY_PORT=8500
+      - DEBUG=*connector:rest*,*service-discovery*,*discovery-agent*
+    ports:
+      - "3001:3000"
+    restart: always
+    depends_on:
+      - consul-master
+
+  enterprise-service-2:
+    build:
+      context: enterprise-service
+    environment:
+      - SERVICE_DISCOVERY_ADAPTER=consul
+      - SERVICE_DISCOVERY_HOST=consul-master
+      - SERVICE_DISCOVERY_PORT=8500
+      - DEBUG=*connector:rest*,*service-discovery*,*discovery-agent*
+    ports:
+      - "3002:3000"
+    restart: always
+    depends_on:
+      - consul-master
+
+  enterprise-service-3:
+    build:
+      context: enterprise-service
+    environment:
+      - SERVICE_DISCOVERY_ADAPTER=consul
+      - SERVICE_DISCOVERY_HOST=consul-master
+      - SERVICE_DISCOVERY_PORT=8500
+      - DEBUG=*connector:rest*,*service-discovery*,*discovery-agent*
+      - IS_FLAKY=1
+    ports:
+      - "3003:3000"
+    restart: "no"
+    depends_on:
+      - consul-master
+
+
+  #####################################
+  #
+  # Channel
+
+  channel-service:
+    build:
+      context: channel-service
+    ports:
+      - "4000:4000"
+    environment:
+      - PORT=4000
+      - SERVICE_DISCOVERY_ADAPTER=consul
+      - SERVICE_DISCOVERY_HOST=consul-master
+      - SERVICE_DISCOVERY_PORT=8500
+      - DEBUG=*connector:rest*,*service-discovery*,*discovery-agent*,*enterpriseRESTConnector*
+    depends_on:
+      - enterprise-service-1
+    restart: always
+
+
+  #####################################
+  #
+  # Consul
+
+  consul-master:
+      image: progrium/consul:latest
+      container_name: consul-master
+      hostname: consul-master
+      ports:
+        - "8400:8400"
+        - "8500:8500"
+        - "8600:53"
+      command: "-server -bootstrap-expect 3 -ui-dir /ui"
+
+  consul-1:
+    image: progrium/consul:latest
+    container_name: consul-1
+    hostname: consul-1
+    expose:
+      - "8400"
+      - "8500"
+      - "8600"
+    command: "-server -join consul-master"
+    depends_on:
+      - consul-master
+
+  consul-2:
+    image: progrium/consul:latest
+    container_name: consul-2
+    hostname: consul-2
+    expose:
+      - "8400"
+      - "8500"
+      - "8600"
+    command: "-server -join consul-master"
+    depends_on:
+      - consul-master

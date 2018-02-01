@@ -1,0 +1,82 @@
+version: '3'
+
+services:
+
+  #####################################
+  #
+  # Enterprise
+
+  enterprise-service-1:
+    build:
+      context: enterprise-service
+    environment:
+      - SERVICE_DISCOVERY_ADAPTER=eureka
+      - SERVICE_DISCOVERY_HOST=eureka-master
+      - SERVICE_DISCOVERY_PORT=8761
+      - DEBUG=*service-discovery*,*discovery-agent*
+    ports:
+      - "3001:3000"
+    restart: always
+    depends_on:
+      - eureka-master
+
+  enterprise-service-2:
+    build:
+      context: enterprise-service
+    environment:
+      - SERVICE_DISCOVERY_ADAPTER=eureka
+      - SERVICE_DISCOVERY_HOST=eureka-master
+      - SERVICE_DISCOVERY_PORT=8761
+      - DEBUG=*service-discovery*,*discovery-agent*
+    ports:
+      - "3002:3000"
+    restart: always
+    depends_on:
+      - eureka-master
+
+  enterprise-service-3:
+    build:
+      context: enterprise-service
+    environment:
+      - SERVICE_DISCOVERY_ADAPTER=eureka
+      - SERVICE_DISCOVERY_HOST=eureka-master
+      - SERVICE_DISCOVERY_PORT=8761
+      - DEBUG=*service-discovery*,*discovery-agent*
+      - IS_FLAKY=1
+    ports:
+      - "3003:3000"
+    restart: always
+    depends_on:
+      - eureka-master
+
+
+  #####################################
+  #
+  # Channel
+
+  channel-service:
+    build:
+      context: channel-service
+    ports:
+      - "4000:4000"
+    environment:
+      - PORT=4000
+      - SERVICE_DISCOVERY_ADAPTER=eureka
+      - SERVICE_DISCOVERY_HOST=eureka-master
+      - SERVICE_DISCOVERY_PORT=8761
+      - DEBUG=*service-discovery*,*discovery-agent*
+    depends_on:
+      - enterprise-service-1
+    restart: always
+
+
+  #####################################
+  #
+  # Eureka
+
+  eureka-master:
+      image: springcloud/eureka
+      container_name: eureka-master
+      hostname: eureka-master
+      ports:
+        - "8761:8761"
