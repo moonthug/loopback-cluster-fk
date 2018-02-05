@@ -1,0 +1,20 @@
+{
+  "name": "pingConsumer1",
+  "base": "Model",
+  "idInjection": true,
+  "options": {
+    "validateUpsert": true
+  },
+  "properties": {
+    "hostname": {
+      "type": "string"
+    },
+    "service": {
+      "type": "string"
+    }
+  },
+  "validations": [],
+  "relations": {},
+  "acls": [],
+  "methods": {}
+}

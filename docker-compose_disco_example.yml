@@ -1,0 +1,201 @@
+version: '3'
+
+services:
+
+  #####################################
+  #
+  # Consumed 1
+
+  consumed-1-service-1:
+    build:
+      context: consumed-1
+    environment:
+      - SERVICE_DISCOVERY_ADAPTER=eureka
+      - SERVICE_DISCOVERY_HOST=sd-master
+      - SERVICE_DISCOVERY_PORT=8761
+      - DEBUG=*service-discovery*,*discovery-agent*
+    ports:
+      - "3001:3000"
+    restart: always
+    depends_on:
+      - sd-master
+
+  consumed-1-service-2:
+    build:
+      context: consumed-1
+    environment:
+      - SERVICE_DISCOVERY_ADAPTER=eureka
+      - SERVICE_DISCOVERY_HOST=sd-master
+      - SERVICE_DISCOVERY_PORT=8761
+      - DEBUG=*service-discovery*,*discovery-agent*
+    ports:
+      - "3002:3000"
+    restart: always
+    depends_on:
+      - sd-master
+
+  consumed-1-service-3:
+    build:
+      context: consumed-1
+    environment:
+      - SERVICE_DISCOVERY_ADAPTER=eureka
+      - SERVICE_DISCOVERY_HOST=sd-master
+      - SERVICE_DISCOVERY_PORT=8761
+      - DEBUG=*service-discovery*,*discovery-agent*
+      - IS_FLAKY=1
+    ports:
+      - "3003:3000"
+    restart: always
+    depends_on:
+      - sd-master
+
+
+  #####################################
+  #
+  # Consumed 2
+
+  consumed-2-service-1:
+    build:
+      context: consumed-2
+    environment:
+      - SERVICE_DISCOVERY_ADAPTER=eureka
+      - SERVICE_DISCOVERY_HOST=sd-master
+      - SERVICE_DISCOVERY_PORT=8761
+      - DEBUG=*service-discovery*,*discovery-agent*
+    ports:
+      - "4001:3000"
+    restart: always
+    depends_on:
+      - sd-master
+
+  consumed-2-service-2:
+    build:
+      context: consumed-2
+    environment:
+      - SERVICE_DISCOVERY_ADAPTER=eureka
+      - SERVICE_DISCOVERY_HOST=sd-master
+      - SERVICE_DISCOVERY_PORT=8761
+      - DEBUG=*service-discovery*,*discovery-agent*
+    ports:
+      - "4002:3000"
+    restart: always
+    depends_on:
+      - sd-master
+
+  consumed-2-service-3:
+    build:
+      context: consumed-2
+    environment:
+      - SERVICE_DISCOVERY_ADAPTER=eureka
+      - SERVICE_DISCOVERY_HOST=sd-master
+      - SERVICE_DISCOVERY_PORT=8761
+      - DEBUG=*service-discovery*,*discovery-agent*
+      - IS_FLAKY=1
+    ports:
+      - "4003:3000"
+    restart: always
+    depends_on:
+      - sd-master
+
+  #####################################
+  #
+  # Channel
+
+  consumer-service-1:
+    build:
+      context: consumer
+    ports:
+      - "5001:4000"
+    environment:
+      - PORT=4000
+      - SERVICE_DISCOVERY_ADAPTER=eureka
+      - SERVICE_DISCOVERY_HOST=sd-master
+      - SERVICE_DISCOVERY_PORT=8761
+      - DEBUG=*service-discovery*,*discovery-agent*
+    depends_on:
+      - consumed-1-service-1
+      - consumed-2-service-1
+      - sd-master
+    restart: always
+
+  consumer-service-2:
+      build:
+        context: consumer
+      ports:
+        - "5002:4000"
+      environment:
+        - PORT=4000
+        - SERVICE_DISCOVERY_ADAPTER=eureka
+        - SERVICE_DISCOVERY_HOST=sd-master
+        - SERVICE_DISCOVERY_PORT=8761
+        - DEBUG=*service-discovery*,*discovery-agent*
+      depends_on:
+        - consumed-1-service-1
+        - consumed-2-service-1
+        - sd-master
+      restart: always
+
+  #####################################
+  #
+  # Load Balancer
+
+  load-balancer:
+      build:
+        context:  ./nginx
+      ports:
+        - "80:80"
+      links:
+        - consumer-service-1
+        - consumer-service-2
+      depends_on:
+        - consumer-service-1
+
+
+  #####################################
+  #
+  # Eureka
+
+  sd-master:
+      image: springcloud/eureka
+      container_name: eureka-master
+      hostname: sd-master
+      ports:
+        - "8761:8761"
+
+#  #####################################
+#  #
+#  # eureka
+#
+#  sd-master:
+#      image: progrium/eureka:latest
+#      container_name: eureka-master
+#      hostname: sd-master
+#      ports:
+#        - "8400:8400"
+#        - "8761:8761"
+#        - "8600:53"
+#      command: "-server -bootstrap-expect 3 -ui-dir /ui"
+#
+#  eureka-1:
+#    image: progrium/eureka:latest
+#    container_name: eureka-1
+#    hostname: eureka-1
+#    expose:
+#      - "8400"
+#      - "8761"
+#      - "8600"
+#    command: "-server -join sd-master"
+#    depends_on:
+#      - sd-master
+#
+#  eureka-2:
+#    image: progrium/eureka:latest
+#    container_name: eureka-2
+#    hostname: eureka-2
+#    expose:
+#      - "8400"
+#      - "8761"
+#      - "8600"
+#    command: "-server -join sd-master"
+#    depends_on:
+#      - sd-master

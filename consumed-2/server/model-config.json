@@ -12,13 +12,5 @@
       "../common/mixins",
       "./mixins"
     ]
-  },
-  "pingConsumer1": {
-    "dataSource": "discoConsumed1",
-    "public": true
-  },
-  "pingConsumer2": {
-    "dataSource": "discoConsumed2",
-    "public": true
   }
 }

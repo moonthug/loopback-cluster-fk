@@ -1,20 +1,15 @@
 {
-  "name": "TwitterUser",
+  "name": "pingConsumer2",
   "base": "Model",
   "idInjection": true,
   "options": {
     "validateUpsert": true
   },
   "properties": {
-    "id": {
-      "type": "string",
-      "required": true
+    "hostname": {
+      "type": "string"
     },
-    "screenName": {
-      "type": "string",
-      "required": true
-    },
-    "name": {
+    "service": {
       "type": "string"
     }
   },

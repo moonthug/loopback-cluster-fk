@@ -11,7 +11,7 @@ module.exports = {
     connector: 'loopback-connector-disco-rest',
     serviceDiscovery: {
       enabled: true,
-      adapter: 'eureka',
+      adapter: process.env.SERVICE_DISCOVERY_ADAPTER || 'consul',
       providers: [
         {
           host: process.env.SERVICE_DISCOVERY_HOST,
@@ -19,7 +19,7 @@ module.exports = {
         },
       ],
       registration: {
-        type: 'es-twitter',
+        type: 'consumed-2',
         advertiseHost: process.env.SERVICE_DISCOVERY_ADVERTISE_HOST || os.hostname(),
         advertisePort: process.env.SERVICE_DISCOVERY_ADVERTISE_PORT || process.env.PORT || 3000,
         checks: [

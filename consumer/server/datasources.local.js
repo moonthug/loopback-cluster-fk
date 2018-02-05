@@ -4,14 +4,14 @@
 const os = require('os');
 
 module.exports = {
-  disco: {
-    name: 'disco',
+  register: {
+    name: 'register',
     debug: true,
     baseURL: 'http://127.0.0.1:3000',
     connector: 'loopback-connector-disco-rest',
     serviceDiscovery: {
       enabled: true,
-      adapter: 'eureka',
+      adapter: process.env.SERVICE_DISCOVERY_ADAPTER || 'consul',
       providers: [
         {
           host: process.env.SERVICE_DISCOVERY_HOST,
@@ -19,31 +19,77 @@ module.exports = {
         },
       ],
       registration: {
-        type: 'cs-twitter',
+        type: 'consumer',
         advertiseHost: process.env.SERVICE_DISCOVERY_ADVERTISE_HOST || os.hostname(),
-        advertisePort: process.env.SERVICE_DISCOVERY_ADVERTISE_PORT || process.env.PORT || 3000,
+        advertisePort: process.env.SERVICE_DISCOVERY_ADVERTISE_PORT || process.env.PORT || 5000,
+        checks: [
+          {
+            name: 'alive',
+            route: '/',
+          },
+        ],
       },
       pool: {
-        type: 'es-twitter',
+        type: 'consumer',
+      },
+    },
+  },
+  discoConsumed1: {
+    name: 'discoConsumed1',
+    debug: true,
+    baseURL: 'http://127.0.0.1:3000',
+    connector: 'loopback-connector-disco-rest',
+    serviceDiscovery: {
+      enabled: true,
+      adapter: process.env.SERVICE_DISCOVERY_ADAPTER || 'consul',
+      providers: [
+        {
+          host: process.env.SERVICE_DISCOVERY_HOST,
+          port: process.env.SERVICE_DISCOVERY_PORT,
+        },
+      ],
+      pool: {
+        type: 'consumed-1',
       },
     },
     operations: [
       {
         template: {
-          method: 'POST',
-          url: '/api/TwitterUsers/getUserByScreenName',
-          headers: {
-            accept: 'application/json',
-            'content-type': 'multipart/form-data',
-          },
-          form: {
-            screenName: '{screenName}',
-          },
+          method: 'GET',
+          url: '/ping',
         },
         functions: {
-          getUserByScreenName: [
-            'screenName',
-          ],
+          ping: [],
+        },
+      },
+    ],
+  },
+  discoConsumed2: {
+    name: 'discoConsumed2',
+    debug: true,
+    baseURL: 'http://127.0.0.1:3000',
+    connector: 'loopback-connector-disco-rest',
+    serviceDiscovery: {
+      enabled: true,
+      adapter: process.env.SERVICE_DISCOVERY_ADAPTER || 'consul',
+      providers: [
+        {
+          host: process.env.SERVICE_DISCOVERY_HOST,
+          port: process.env.SERVICE_DISCOVERY_PORT,
+        },
+      ],
+      pool: {
+        type: 'consumed-2',
+      },
+    },
+    operations: [
+      {
+        template: {
+          method: 'GET',
+          url: '/ping',
+        },
+        functions: {
+          ping: [],
         },
       },
     ],
