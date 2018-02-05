@@ -1,5 +1,11 @@
 #!/usr/bin/env bash
 
+
+if [ $EUID -ne 0 ]; then
+   echo "Error: this script must be run as root"
+   exit 1
+fi
+
 if ! [ -x "$(command -v ghost)" ]; then
   echo 'Error: ghost is not installed.' >&2
   exit 1
