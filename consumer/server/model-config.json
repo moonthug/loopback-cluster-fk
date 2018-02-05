@@ -12,5 +12,9 @@
       "../common/mixins",
       "./mixins"
     ]
+  },
+  "TwitterUser": {
+    "dataSource": "disco",
+    "public": true
   }
 }

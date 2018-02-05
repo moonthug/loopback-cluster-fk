@@ -31,7 +31,7 @@ module.exports = {
       {
         template: {
           method: 'POST',
-          url: 'http://example.com/',
+          url: '/api/TwitterUsers/getUserByScreenName',
           headers: {
             accept: 'application/json',
             'content-type': 'multipart/form-data',

@@ -27,3 +27,7 @@ boot(app, __dirname, function(err) {
   if (require.main === module)
     app.start();
 });
+
+process.on('unhandledRejection', (reason, p) => {
+  console.log('Unhandled Rejection at: Promise', p, 'reason:', reason);
+});
